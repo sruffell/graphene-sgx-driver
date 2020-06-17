@@ -16,6 +16,11 @@ endif
 clean:
 	$(RM) -r *.o *.ko *.order *.symvers *.mod.c .tmp_versions .*o.cmd .cache.mk *.o.ur-safe *.mod .gsgx.mod.cmd
 
+install: default
+	$(MAKE) INSTALL_MOD_DIR=kernel/drivers/graphene/sgx -C $(KDIR) M=$(PWD) modules_install
+	depmod -A
+	sh -c "cat /etc/modules | grep -Fxq gsgx || echo gsgx >> /etc/modules"
+
 .PHONY: distclean
 distclean: clean
 	$(RM) sgx.h
